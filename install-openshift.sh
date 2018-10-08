@@ -4,7 +4,7 @@
 
 ## Compute default SCRIPT_REPO:
 REPO="$(git remote -v | grep fetch | awk '{print $2}' | awk -F 'https://github.com/' '{print $2}')"
-BRANCH="$(git status | grep 'On branch' | awk '{print $3}')"
+BRANCH="$(git branch | grep \* | awk '{print $2}')"
 SCRIPT_REPO_DEFAULT="https://raw.githubusercontent.com/$REPO/$BRANCH"
 
 ## Default variables to use
