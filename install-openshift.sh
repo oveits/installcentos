@@ -83,26 +83,26 @@ bash 2_install-openshift-prerequisites.sh
 cd openshift-ansible && git fetch && git checkout release-3.10 && cd ..
 
 curl -o inventory.download $SCRIPT_REPO/inventory.ini
-envsubst < inventory.download > inventory.ini
+envsubst < inventory.download > inventory
 
-# add proxy in inventory.ini if proxy variables are set
+# add proxy in inventory if proxy variables are set
 if [ ! -z "${HTTPS_PROXY:-${https_proxy:-${HTTP_PROXY:-${http_proxy}}}}" ]; then
-	echo >> inventory.ini
-	echo "openshift_http_proxy=\"${HTTP_PROXY:-${http_proxy:-${HTTPS_PROXY:-${https_proxy}}}}\"" >> inventory.ini
-	echo "openshift_https_proxy=\"${HTTPS_PROXY:-${https_proxy:-${HTTP_PROXY:-${http_proxy}}}}\"" >> inventory.ini
+	echo >> inventory
+	echo "openshift_http_proxy=\"${HTTP_PROXY:-${http_proxy:-${HTTPS_PROXY:-${https_proxy}}}}\"" >> inventory
+	echo "openshift_https_proxy=\"${HTTPS_PROXY:-${https_proxy:-${HTTP_PROXY:-${http_proxy}}}}\"" >> inventory
 	if [ ! -z "${NO_PROXY:-${no_proxy}}" ]; then
 		__no_proxy="${NO_PROXY:-${no_proxy}},${IP},.${DOMAIN}"
 	else
 		__no_proxy="${IP},.${DOMAIN}"
 	fi
-	echo "openshift_no_proxy=\"${__no_proxy}\"" >> inventory.ini
+	echo "openshift_no_proxy=\"${__no_proxy}\"" >> inventory
 fi
 
 mkdir -p /etc/origin/master/
 touch /etc/origin/master/htpasswd
 
-ansible-playbook -i inventory.ini openshift-ansible/playbooks/prerequisites.yml
-ansible-playbook -i inventory.ini openshift-ansible/playbooks/deploy_cluster.yml
+ansible-playbook -i inventory openshift-ansible/playbooks/prerequisites.yml
+ansible-playbook -i inventory openshift-ansible/playbooks/deploy_cluster.yml
 
 htpasswd -b /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
 oc adm policy add-cluster-role-to-user cluster-admin ${USERNAME}
