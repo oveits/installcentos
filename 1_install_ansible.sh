@@ -28,7 +28,7 @@ sed -i -e "s/^enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
 yum -y --enablerepo=epel install ansible pyOpenSSL
 
 # prepare ansible target in case of local install:
-if [ "$REMOTE" != "true"] && [ ! -f ~/.ssh/id_rsa ]; then
+if [ "$REMOTE" != "true" ] && [ ! -f ~/.ssh/id_rsa ]; then
 	ssh-keygen -q -f ~/.ssh/id_rsa -N ""
 	cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 	ssh -o StrictHostKeyChecking=no root@$IP "pwd" < /dev/null
