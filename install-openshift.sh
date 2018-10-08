@@ -3,7 +3,7 @@
 ## see: https://youtu.be/aqXSbDZggK4
 
 ## Compute default SCRIPT_REPO:
-REPO="$(git remote -v | grep fetch | awk '{print $2}' | awk -F 'https://github.com/' '{print $2}')"
+REPO="$(git remote -v | grep fetch | awk '{print $2}' | awk -F 'https://github.com/' '{print $2}' | sed 's/\.git//g')"
 BRANCH="$(git branch | grep \* | awk '{print $2}')"
 SCRIPT_REPO_DEFAULT="https://raw.githubusercontent.com/$REPO/$BRANCH"
 
