@@ -9,13 +9,14 @@ This repository is a set of scripts that will allow you easily install the lates
 2. Clone this repo
 
 ```
-git clone https://github.com/gshipley/installcentos.git
+git clone https://github.com/oveits/installcentos.git
+cd installcentos
+git checkout feature/0001-install-openshift-prerequisites-only
 ```
 
 3. Execute the installation script
 
 ```
-cd installcentos
 ./install-openshift.sh
 ```
 

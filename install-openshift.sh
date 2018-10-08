@@ -2,9 +2,6 @@
 
 ## see: https://youtu.be/aqXSbDZggK4
 
-# install ansible
-bash 1_install_ansible.sh
-
 ## Compute default SCRIPT_REPO:
 REPO="$(git remote -v | grep fetch | awk '{print $2}' | awk -F 'https://github.com/' '{print $2}')"
 BRANCH="$(git status | grep 'On branch' | awk '{print $3}')"
@@ -80,6 +77,9 @@ echo "* Your password is $PASSWORD "
 echo "* OpenShift version: $VERSION "
 echo "******"
 
+# install ansible
+bash 1_install_ansible.sh
+
 # install prerequisites
 bash 2_install-openshift-prerequisites.sh
 
@@ -106,7 +106,7 @@ fi
 # DONE: read path from inventory, and handle, if not found
 HTPASSWD_PATH=$(grep openshift_master_htpasswd_file inventory | awk -F '=' '{print $2}' | sed "s/^'\([^']*\)'.*$/\1/g")
 
-if[ "$HTPASSWD_PATH" != "" ]; then
+if [ "$HTPASSWD_PATH" != "" ]; then
        # TODO: perform the next two commands on the master
        mkdir -p $(dirname $HTPASSWD_PATH)
        touch $HTPASSWD_PATH
@@ -118,7 +118,7 @@ fi
 ansible-playbook -i inventory openshift-ansible/playbooks/prerequisites.yml
 ansible-playbook -i inventory openshift-ansible/playbooks/deploy_cluster.yml
 
-if[ "$HTPASSWD_PATH" != "" ]; then
+if [ "$HTPASSWD_PATH" != "" ]; then
        # TODO: perform on the master:
        htpasswd -b /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
 fi
