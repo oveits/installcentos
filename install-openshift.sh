@@ -5,12 +5,17 @@
 # install ansible
 bash 1_install_ansible.sh
 
+## Compute default SCRIPT_REPO:
+REPO="$(git remote -v | grep fetch | awk '{print $2}' | awk -F 'https://github.com/' '{print $2}')"
+BRANCH="$(git status | grep 'On branch' | awk '{print $3}')"
+SCRIPT_REPO_DEFAULT="https://raw.githubusercontent.com/$REPO/$BRANCH/inventory.ini"
+
 ## Default variables to use
 export INTERACTIVE=${INTERACTIVE:="true"}
 export PVS=${INTERACTIVE:="true"}
-export PASSWORD=${PASSWORD:=password}
+export PASSWORD=${PASSWORD:=aqXSbDZggK4}
 export VERSION=${VERSION:="3.10"}
-export SCRIPT_REPO=${SCRIPT_REPO:="https://raw.githubusercontent.com/gshipley/installcentos/master"}
+export SCRIPT_REPO=${SCRIPT_REPO:="$SCRIPT_REPO_DEFAULT"}
 export API_PORT=${API_PORT:="8443"}
 export METRICS="True"
 export LOGGING="True"
@@ -98,15 +103,30 @@ if [ ! -z "${HTTPS_PROXY:-${https_proxy:-${HTTP_PROXY:-${http_proxy}}}}" ]; then
 	echo "openshift_no_proxy=\"${__no_proxy}\"" >> inventory
 fi
 
-mkdir -p /etc/origin/master/
-touch /etc/origin/master/htpasswd
+# DONE: read path from inventory, and handle, if not found
+HTPASSWD_PATH=$(grep openshift_master_htpasswd_file inventory | awk -F '=' '{print $2}' | sed "s/^'\([^']*\)'.*$/\1/g")
+
+if[ "$HTPASSWD_PATH" != "" ]; then
+       # TODO: perform the next two commands on the master
+       mkdir -p $(dirname $HTPASSWD_PATH)
+       touch $HTPASSWD_PATH
+else
+       echo "WARNING: openshift_master_htpasswd_file not found in inventory"
+       echo "Are you using another method for authentication?"
+fi
 
 ansible-playbook -i inventory openshift-ansible/playbooks/prerequisites.yml
 ansible-playbook -i inventory openshift-ansible/playbooks/deploy_cluster.yml
 
-htpasswd -b /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
+if[ "$HTPASSWD_PATH" != "" ]; then
+       # TODO: perform on the master:
+       htpasswd -b /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
+fi
+
+# TODO: perform on the master or make sure oc is running on the Ansible machine and is connected to the master
 oc adm policy add-cluster-role-to-user cluster-admin ${USERNAME}
 
+# TODO: perform on the master:
 if [ "$PVS" = "true" ]; then
 	for i in `seq 1 200`;
 	do
@@ -133,4 +153,5 @@ echo "*"
 echo "$ oc login -u ${USERNAME} -p ${PASSWORD} https://console.$DOMAIN:$API_PORT/"
 echo "******"
 
+# TODO: run on the master? Or in the Ansible machine?
 oc login -u ${USERNAME} -p ${PASSWORD} https://console.$DOMAIN:$API_PORT/
