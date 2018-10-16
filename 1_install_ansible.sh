@@ -25,7 +25,9 @@ yum -y install epel-release
 sed -i -e "s/^enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
 
 # install the packages for Ansible
-yum -y --enablerepo=epel install ansible pyOpenSSL
+curl -O http://cbs.centos.org/kojifiles/packages/ansible/2.6.5/1.el7/noarch/ansible-2.6.5-1.el7.noarch.rpm
+sudo yum install -y ansible-2.6.5-1.el7.noarch.rpm
+yum -y --enablerepo=epel install pyOpenSSL
 
 # prepare ansible target in case of local install:
 if [ "$REMOTE" != "true" ] && [ ! -f ~/.ssh/id_rsa ]; then
