@@ -80,6 +80,9 @@ if [ $? -eq 1 ]; then
 	systemctl enable NetworkManager
 fi
 
+# remove existing Ansible versions:#
+yum remove -y ansible
+
 # install the packages for Ansible
 curl -O http://cbs.centos.org/kojifiles/packages/ansible/2.6.5/1.el7/noarch/ansible-2.6.5-1.el7.noarch.rpm
 sudo yum install -y ansible-2.6.5-1.el7.noarch.rpm
