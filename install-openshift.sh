@@ -87,6 +87,8 @@ yum remove -y ansible
 curl -O http://cbs.centos.org/kojifiles/packages/ansible/2.6.5/1.el7/noarch/ansible-2.6.5-1.el7.noarch.rpm
 # note: epel is needed to install dependencies like python-keyczar
 yum -y --enablerepo=epel install ansible-2.6.5-1.el7.noarch.rpm
+# exclude ansible from automatic updates:
+cat /etc/yum.conf | grep -v -q 'exclude=ansible' && echo "exclude=ansible" >> /etc/yum.conf
 yum -y --enablerepo=epel install pyOpenSSL
 
 [ ! -d openshift-ansible ] && git clone https://github.com/openshift/openshift-ansible.git
