@@ -24,9 +24,13 @@ yum -y install epel-release
 # Disable the EPEL repository globally so that is not accidentally used during later steps of the installation
 sed -i -e "s/^enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
 
+# remove existing Ansible versions:#
+yum remove -y ansible
+
 # install the packages for Ansible
 curl -O http://cbs.centos.org/kojifiles/packages/ansible/2.6.5/1.el7/noarch/ansible-2.6.5-1.el7.noarch.rpm
-sudo yum install -y ansible-2.6.5-1.el7.noarch.rpm
+# note: epel is needed to install dependencies like python-keyczar
+yum -y --enablerepo=epel install ansible-2.6.5-1.el7.noarch.rpm
 yum -y --enablerepo=epel install pyOpenSSL
 
 # prepare ansible target in case of local install:
