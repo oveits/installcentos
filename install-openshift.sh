@@ -85,7 +85,7 @@ bash 2_install-openshift-prerequisites.sh
 
 [ ! -d openshift-ansible ] && git clone https://github.com/openshift/openshift-ansible.git
 
-cd openshift-ansible && git fetch && git checkout release-3.10 && cd ..
+cd openshift-ansible && git fetch && git checkout release-${VERSION} && cd ..
 
 curl -o inventory.download $SCRIPT_REPO/inventory.ini
 envsubst < inventory.download > inventory
