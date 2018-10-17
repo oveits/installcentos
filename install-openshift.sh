@@ -11,7 +11,7 @@ SCRIPT_REPO_DEFAULT="https://raw.githubusercontent.com/$REPO/$BRANCH"
 export INTERACTIVE=${INTERACTIVE:="true"}
 export PVS=${INTERACTIVE:="true"}
 export PASSWORD=${PASSWORD:=aqXSbDZggK4}
-export VERSION=${VERSION:="3.10"}
+export VERSION=${VERSION:="3.11"}
 export SCRIPT_REPO=${SCRIPT_REPO:="$SCRIPT_REPO_DEFAULT"}
 export API_PORT=${API_PORT:="8443"}
 export METRICS="True"
