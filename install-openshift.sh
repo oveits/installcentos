@@ -87,7 +87,9 @@ bash 2_install-openshift-prerequisites.sh
 
 cd openshift-ansible && git fetch && git checkout release-${VERSION} && cd ..
 
-curl -o inventory.download $SCRIPT_REPO/inventory.ini
+[ -r inventory.ini ] \
+   && cp inventory.ini inventory.download \
+   || curl -o inventory.download $SCRIPT_REPO/inventory.ini
 envsubst < inventory.download > inventory
 
 # add proxy in inventory if proxy variables are set
