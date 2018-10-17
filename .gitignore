@@ -1,3 +1,7 @@
 *~
 run.sh
 *.swp
+inventory
+inventory.download
+ansible*
+openshift-ansible
